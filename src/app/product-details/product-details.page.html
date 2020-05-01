@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ product.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-fab horizontal="end" vertical="top" edge (click)="openCart()">
+    <ion-fab color="danger"><ion-icon name="cart"></ion-icon></ion-fab>
+  </ion-fab>
+
+  <ion-card>
+    <ion-slides autoplay="3000" loop="true">
+      <ion-slide *ngFor="let image of product.images">
+        <img [src]="image.src" />
+      </ion-slide>
+    </ion-slides>
+
+    <ion-card-content>
+      <ion-card-title>
+        {{ product.name }} &nbsp;
+        <ion-chip *ngFor="let cat of product.categories">
+          <ion-label color="danger"> {{ cat.name }} </ion-label>
+        </ion-chip>
+      </ion-card-title>
+
+      <p [innerHTML]="product.description"></p>
+
+    </ion-card-content>
+
+
+  </ion-card>
+
+  <ion-card *ngIf="product.variations.length > 0">
+    <ion-item-divider color="light">Product options</ion-item-divider>
+    <ng-container *ngFor="let attribute of product.attributes">
+      <ion-item *ngIf="attribute.variation">
+        <ion-label> {{ attribute.name | titlecase }}</ion-label>
+        <ion-select interface="popover" [(ngModel)]="selectedOptions[attribute.name]" (ionChange)="check(attribute.name)">
+          <ion-select-option *ngFor="let option of attribute.options" [value]="option">{{ option }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ng-container>
+  </ion-card>
+
+  <ion-card *ngIf="product.attributes.length > 0">
+    <ion-card-content>
+      <ion-card-title>
+        Specifications
+      </ion-card-title>
+
+      <ion-grid>
+        <ion-row *ngFor="let att of product.attributes">
+          <ion-col size="4">
+            {{ att.name}}
+          </ion-col>
+          <ion-col size="8">
+            <span *ngFor="let option of att.options"> {{ option }}</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="reviews.length > 0">
+    <ion-card-content>
+      <ion-card-title>
+        Reviews
+      </ion-card-title>
+
+      <ion-grid>
+        <ion-row *ngFor="let review of reviews">
+          <ion-col size="4">
+            <b>{{ review.name }}</b><br/>
+            <span *ngIf="review.rating >= 1">
+            <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+          </span>
+            <span *ngIf="review.rating >= 2">
+            <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+          </span>
+            <span *ngIf="review.rating >= 3">
+            <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+          </span>
+            <span *ngIf="review.rating >= 4">
+            <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+          </span>
+            <span *ngIf="review.rating >= 5">
+            <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+          </span>
+
+          </ion-col>
+          <ion-col size="8">
+            {{ review.review }}
+          </ion-col>
+
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" fill="outline" color="danger" (click)="addToCart(product)">
+      <ion-icon name="basket"></ion-icon> &nbsp; {{ requireOptions ? 'Select Product Options' : 'Add to Cart for ' + '₱' + '' + productPrice}}
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,92 @@
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-content class="card-background-page">
+        <ion-card>
+          <img src="./assets/images/rock.png" />
+          <div class="card-title">WOOIONIC</div>
+          <div class="card-subtitle">Keep Shopping</div>
+        </ion-card>
+    
+    
+        <ion-list>
+          <ion-item-divider color="danger">Navigation</ion-item-divider>
+    
+          <div>
+            <ion-menu-toggle>
+              <ion-item class="ion-text-wrap" [routerLink]="['/home']" routerDirection="forward">
+                <ion-icon name="home" slot="start" size="large"></ion-icon>
+                <ion-label> Home </ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+
+          <ion-item-divider color="danger">Categories</ion-item-divider>
+    
+          <div *ngFor="let category of categories">
+            <ion-menu-toggle>
+              <ion-item class="ion-text-wrap" (click)="openCategoryPage(category)">
+                <ion-icon name="{{ (category.icon) ? category.icon : 'arrow-forward'}}" slot="start" size="large"></ion-icon>
+                <ion-label> {{ category.name }} </ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+            
+    
+            <!-- Optional Subcategories Display -->
+            <!-- 
+            <ion-menu-toggle>
+              <ion-item *ngFor="let sub of category.subCategories" class="ion-text-wrap" (click)="openCategoryPage(sub)">
+                <ion-icon name="arrow-forward" slot="start" size="large"></ion-icon>
+                <ion-label> {{ sub.name }} </ion-label>
+      
+              </ion-item>
+            </ion-menu-toggle>
+             -->
+          </div>
+    
+          <ion-item-divider color="danger">Account</ion-item-divider>
+          <ion-menu-toggle>
+            <ion-item (click)="openPage('signup')" *ngIf="!loggedIn">
+              <ion-icon name="person-add" slot="start" size="large"></ion-icon>
+              <ion-label>Sign Up</ion-label>
+
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle>
+            <ion-item (click)="openPage('login')" *ngIf="!loggedIn">
+              <ion-icon name="log-in" slot="start" size="large"></ion-icon>
+              <ion-label>Login</ion-label>
+
+            </ion-item>
+          </ion-menu-toggle>
+          
+          <ion-menu-toggle>
+            <ion-item *ngIf="loggedIn">
+              <ion-icon name="person-circle" slot="start" size="large"></ion-icon>
+              <ion-label>{{ (this.user.firstname == '' ? this.user.username : this.user.firstname) || "" }}</ion-label>
+
+            </ion-item>
+          </ion-menu-toggle>
+          
+          <ion-menu-toggle>
+            <ion-item *ngIf="loggedIn" (click)="openPage('cart')">
+              <ion-icon name="cart" slot="start" size="large"></ion-icon>
+              <ion-label>Your Cart</ion-label>
+
+            </ion-item>
+          </ion-menu-toggle>
+          
+          <ion-menu-toggle>
+            <ion-item *ngIf="loggedIn" (click)="openPage('logout')">
+              <ion-icon name="log-out" slot="start" size="large"></ion-icon>
+              <ion-label>Logout</ion-label>
+
+            </ion-item>
+          </ion-menu-toggle>
+          
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Products by Category</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let product of products" class="ion-text-wrap" (click)="openProductPage(product)">
+      <ion-thumbnail slot="start">
+        <img *ngIf="product.images.length != 0" [src]="product.images[0].src" />
+      </ion-thumbnail>
+
+      <div>
+        <h2> {{ product.name }} </h2>
+              
+        <div>
+          <p>
+            <span [innerHTML]="product.short_description.substr(0, 50) + '...'"></span>
+            <span [innerHTML]="product.price_html"></span>
+            <span *ngIf="product.average_rating >= 1">
+              <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+            </span>
+            <span *ngIf="product.average_rating >= 2">
+              <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+            </span>
+            <span *ngIf="product.average_rating >= 3">
+              <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+            </span>
+            <span *ngIf="product.average_rating >= 4">
+              <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+            </span>
+            <span *ngIf="product.average_rating >= 5">
+              <ion-icon style="color: #d4af37" size="small" name="star"></ion-icon>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <ion-button fill="clear" slot="end">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+   <ion-infinite-scroll (ionInfinite)="loadMoreProducts($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

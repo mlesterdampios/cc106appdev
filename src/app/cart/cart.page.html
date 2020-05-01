@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title>Cart</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-card color="danger">
+    <ion-grid>
+      <ion-row>
+        <ion-col>Checkout now this cool items!</ion-col>
+      </ion-row>
+      <ion-row [hidden]="!showEmptyCartMessage">
+        <ion-col>There are no products in your cart!</ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+
+  <ion-card *ngFor="let item of cartItems; let i = index">
+    <ion-item color="light">
+
+      <ion-thumbnail slot="start">
+        <img *ngIf="item.product.images.length != 0" [src]="item.product.images[0].src"/>
+      </ion-thumbnail>
+      <div>
+        <h2>{{ item.product.name }}</h2>
+        <p>
+          {{ item.qty }} pc(s). • ₱
+          <span *ngIf="!item.variation">{{ item.product.price }}</span>
+          <span *ngIf="item.variation">{{ item.variation.price }}</span>
+        </p>
+
+        <div *ngIf="item.variation">
+          <ion-chip *ngFor="let att of item.variation.attributes">
+            <ion-label>{{ att.option | titlecase }}</ion-label>
+          </ion-chip>
+        </div>
+      </div>
+      
+      <!-- <ion-button fill="clear" item-right color="danger" (click)="removeFromCart(item, i)">
+        <ion-icon name="close-circle"></ion-icon>
+      </ion-button> -->
+
+    </ion-item>
+
+    <ion-item class="compact">
+      <ion-row class="ion-no-padding">
+        <ion-col size="8">
+          <ion-button  fill="clear" color="danger" (click)="changeQty(item, i, -1)">
+            <ion-icon slot="icon-only" name="remove-circle"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger"> {{ item.qty }} </ion-button>
+          <ion-button  fill="clear" color="danger" (click)="changeQty(item, i, 1)">
+            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button size="small" fill="outline" (click)="removeFromCart(item, i)" color="danger">Remove</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-card>
+
+
+  <ion-grid>
+    <ion-card>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="2">
+
+          </ion-col>
+          <ion-col size="4">
+            <b>TOTAL</b>
+          </ion-col>
+          <ion-col size="3">
+
+          </ion-col>
+          <ion-col size="3">
+            <b> ₱ {{ total }} </b>
+          </ion-col>
+
+
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button color="danger" fill="outline" expand="block" (click)="closeModal()">Back</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button color="danger" expand="block" (click)="checkout()">Checkout</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

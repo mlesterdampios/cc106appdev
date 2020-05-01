@@ -1,0 +1,7 @@
+{
+  "name": "wooionic",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
