@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 export class LinkService {
 
   apiLink: string = "https://cc106.syncshop.online/";
-  consumer_key: string  = "ck_xxx";
-  consumer_secret: string  = "cs_xxx";
+  consumer_key: string  = process.env.consumer_key;
+  consumer_secret: string  = process.env.consumer_secret;
   constructor() { }
 
   getAPILink() : string{
