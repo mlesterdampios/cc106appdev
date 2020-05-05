@@ -14,8 +14,7 @@ export class ProductsByCategoryPage implements OnInit {
   searchQuery: string = "";
   products: any[] = [];
   page: number = 2;
-  loader;
-  loader2;
+  loaders = [null, null];
   
   search_link = "wp-json/wc/v2/products?category=";
 
@@ -30,14 +29,14 @@ export class ProductsByCategoryPage implements OnInit {
       if (this.router.getCurrentNavigation() && this.router.getCurrentNavigation().extras.hasOwnProperty('state')) {
         console.log(this.router.getCurrentNavigation().extras.state.category);
         this.searchQuery  = this.router.getCurrentNavigation().extras.state.category.id;
-        this.presentLoader();
+        this.presentLoader(0);
         this.httpClient.get(this.linkService.getAPILink() + this.search_link+ this.searchQuery + '&consumer_key='+ this.linkService.getConsumerKey() + '&consumer_secret='+this.linkService.getConsumerSecret()).subscribe((data: any)=>{
-          this.dismissLoader();
+          this.dismissLoader(0);
           this.products  = data;
           console.log(this.products);
         },
         (err)=>{
-          this.dismissLoader();
+          this.dismissLoader(0);
           console.log(err);
         });
       }
@@ -48,42 +47,28 @@ export class ProductsByCategoryPage implements OnInit {
 
   ngOnInit() {
   }
-  async presentLoader2() {
-    this.loader2 = await this.loadingController.create({
+
+  async presentLoader(num) {
+    this.loaders[num] = await this.loadingController.create({
       message: 'Please wait...'
     });
-    await this.loader2.present();
+    await this.loaders[num].present();
   }
 
-  async dismissLoader2() {
-    if(this.loader2==null) return;
-      await this.loader2.dismiss()
+  async dismissLoader(num) {
+    if(this.loaders[num]==null) return;
+      await this.loaders[num].dismiss()
       .then(()=>{
-        this.loader2 = null;
+        this.loaders[num] = null;
       })
       .catch(e => console.log(e));
   }
 
-  async presentLoader() {
-    this.loader = await this.loadingController.create({
-      message: 'Please wait...'
-    });
-    await this.loader.present();
-  }
-
-  async dismissLoader() {
-    if(this.loader==null) return;
-      await this.loader.dismiss()
-      .then(()=>{
-        this.loader = null;
-      })
-      .catch(e => console.log(e));
-  }
   
   loadMoreProducts(event){
-    this.presentLoader2();
+    this.presentLoader(1);
     this.httpClient.get(this.linkService.getAPILink() + this.search_link+ this.searchQuery + "&page=" + this.page + '&consumer_key='+ this.linkService.getConsumerKey() + '&consumer_secret='+this.linkService.getConsumerSecret()).subscribe((data: any)=>{
-      this.dismissLoader2();
+      this.dismissLoader(1);
       this.products  = this.products.concat(data);
       console.log(this.products);
 
@@ -96,7 +81,7 @@ export class ProductsByCategoryPage implements OnInit {
       this.page ++;
     },
     (err)=>{
-      this.dismissLoader2();
+      this.dismissLoader(1);
       console.log(err);
     });
 

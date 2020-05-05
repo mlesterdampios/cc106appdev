@@ -24,6 +24,10 @@ export class CartPage {
       this.storage.ready().then(()=>{
 
         this.storage.get("cart").then( (data)=>{
+          if(data==null){
+            this.showEmptyCartMessage = true;
+            return;
+          }
           this.cartItems = data;
           console.log(this.cartItems);
 
@@ -44,10 +48,7 @@ export class CartPage {
             this.showEmptyCartMessage = true;
 
           }
-
-
         })
-
       })
   }
 

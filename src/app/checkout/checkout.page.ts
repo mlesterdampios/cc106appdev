@@ -22,9 +22,7 @@ export class CheckoutPage implements OnInit {
   orders_link = "wp-json/wc/v3/orders";
 
   email;
-  loader;
-  loader2;
-  loader3;
+  loaders = [null, null, null];
 
   constructor(private payPal: PayPal, 
     private navController: NavController,
@@ -49,66 +47,34 @@ export class CheckoutPage implements OnInit {
         this.email = userLoginInfo.user.email;
         let id = userLoginInfo.user.id;
 
-        this.presentLoader();
+        this.presentLoader(0);
         this.httpClient.get(this.linkService.getAPILink() + this.customers_link +'/' + id + '?consumer_key='+ this.linkService.getConsumerKey() + '&consumer_secret='+this.linkService.getConsumerSecret()).subscribe((data: any)=>{
-          this.dismissLoader();
+          this.dismissLoader(0);
           this.newOrder = data;
           console.log(this.newOrder);
         },
         (err)=>{
-          this.dismissLoader();
+          this.dismissLoader(0);
           console.log(err);
         });
       })
     }
 
-  async presentLoader2() {
-    this.loader2 = await this.loadingController.create({
-      message: 'Please wait...'
-    });
-    await this.loader2.present();
-  }
-
-  async dismissLoader2() {
-    if(this.loader2==null) return;
-      await this.loader2.dismiss()
-      .then(()=>{
-        this.loader2 = null;
-      })
-      .catch(e => console.log(e));
-  }
-
-  async presentLoader3() {
-    this.loader3 = await this.loadingController.create({
-      message: 'Please wait...'
-    });
-    await this.loader3.present();
-  }
-
-  async dismissLoader3() {
-    if(this.loader3==null) return;
-      await this.loader3.dismiss()
-      .then(()=>{
-        this.loader3 = null;
-      })
-      .catch(e => console.log(e));
-  }
-
-  async presentLoader() {
-    this.loader = await this.loadingController.create({
-      message: 'Please wait...'
-    });
-    await this.loader.present();
-  }
-
-  async dismissLoader() {
-    if(this.loader==null) return;
-      await this.loader.dismiss()
-      .then(()=>{
-        this.loader = null;
-      })
-      .catch(e => console.log(e));
-  }
+    async presentLoader(num) {
+      this.loaders[num] = await this.loadingController.create({
+        message: 'Please wait...'
+      });
+      await this.loaders[num].present();
+    }
+  
+    async dismissLoader(num) {
+      if(this.loaders[num]==null) return;
+        await this.loaders[num].dismiss()
+        .then(()=>{
+          this.loaders[num] = null;
+        })
+        .catch(e => console.log(e));
+    }
   
   setBillingToShipping() {
     this.billing_shipping_same = !this.billing_shipping_same;
@@ -181,11 +147,11 @@ export class CheckoutPage implements OnInit {
               }
             });
 
-            let payment = new PayPalPayment(total.toString(), 'USD', 'Description', 'sale');
+            let payment = new PayPalPayment(total.toString(), 'PHP', 'Description', 'sale');
             this.payPal.renderSinglePaymentUI(payment).then((response) => {
               // Successfully paid
 
-              alert(JSON.stringify(response));
+              //alert(JSON.stringify(response));
 
 
               data.line_items = orderItems;
@@ -193,16 +159,16 @@ export class CheckoutPage implements OnInit {
               let orderData: any = {};
 
               orderData.order = data;
-              this.presentLoader2();
+              this.presentLoader(1);
               this.httpClient.post(this.linkService.getAPILink() + this.orders_link + '?consumer_key='+ this.linkService.getConsumerKey() + '&consumer_secret='+this.linkService.getConsumerSecret(), orderData.order).subscribe((data: any)=>{
-                this.dismissLoader2(); 
+                this.dismissLoader(1); 
                 console.log(data);
                 let response = data;
           
                 this.presentAlert("Order Placed Successfully", "Your order has been placed successfully. Order#" + response.id);
               },
               (err)=>{ 
-                this.dismissLoader2(); 
+                this.dismissLoader(1); 
                 console.log(err);
               });
             })
@@ -237,16 +203,16 @@ export class CheckoutPage implements OnInit {
 
         orderData.order = data;
         console.log(orderData.order);
-        this.presentLoader3();
+        this.presentLoader(2);
         this.httpClient.post(this.linkService.getAPILink() + this.orders_link + '?consumer_key='+ this.linkService.getConsumerKey() + '&consumer_secret='+this.linkService.getConsumerSecret(), orderData.order).subscribe((data: any)=>{
-          this.dismissLoader3(); 
+          this.dismissLoader(2); 
           console.log(data);
           let response = data;
     
           this.presentAlert("Order Placed Successfully", "Your order has been placed successfully. Order#" + response.id);
         },
         (err)=>{ 
-          this.dismissLoader3(); 
+          this.dismissLoader(2); 
           console.log(err);
         });
       })

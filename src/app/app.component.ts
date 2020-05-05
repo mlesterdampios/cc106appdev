@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
 
   loggedIn: boolean;
   user: any;
-  loader;
+  loaders = [null];
 
   products_categories_link = "wp-json/wc/v3/products/categories";
 
@@ -48,9 +48,9 @@ export class AppComponent implements OnInit {
 
     this.categories = [];
     this.user = {};
-    this.presentLoader();
+    this.presentLoader(0);
     this.httpClient.get(this.linkService.getAPILink() + this.products_categories_link + '?consumer_key='+ this.linkService.getConsumerKey() + '&consumer_secret='+this.linkService.getConsumerSecret()).subscribe((data: any)=>{
-      this.dismissLoader();
+      this.dismissLoader(0);
       console.log(data);
 
       let temp = data;
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
       }
     },
     (err)=>{
-      this.dismissLoader();
+      this.dismissLoader(0);
       console.log(err);
     });
 
@@ -132,18 +132,18 @@ export class AppComponent implements OnInit {
     this.oneSignal.endInit();
   }
 
-  async presentLoader() {
-    this.loader = await this.loadingController.create({
+  async presentLoader(num) {
+    this.loaders[num] = await this.loadingController.create({
       message: 'Please wait...'
     });
-    await this.loader.present();
+    await this.loaders[num].present();
   }
 
-  async dismissLoader() {
-    if(this.loader==null) return;
-      await this.loader.dismiss()
+  async dismissLoader(num) {
+    if(this.loaders[num]==null) return;
+      await this.loaders[num].dismiss()
       .then(()=>{
-        this.loader = null;
+        this.loaders[num] = null;
       })
       .catch(e => console.log(e));
   }

@@ -13,8 +13,7 @@ export class SignupPage implements OnInit {
   newUser: any = {};
   billing_shipping_same: boolean;
   WooCommerce: any;
-  loader;
-  loader2;
+  loaders = [null, null];
 
   signup_link = "wp-json/wc/v3/customers";
 
@@ -32,34 +31,18 @@ export class SignupPage implements OnInit {
   ngOnInit() {
   }
 
-  async presentLoader2() {
-    this.loader2 = await this.loadingController.create({
+  async presentLoader(num) {
+    this.loaders[num] = await this.loadingController.create({
       message: 'Please wait...'
     });
-    await this.loader2.present();
+    await this.loaders[num].present();
   }
 
-  async dismissLoader2() {
-    if(this.loader2==null) return;
-      await this.loader2.dismiss()
+  async dismissLoader(num) {
+    if(this.loaders[num]==null) return;
+      await this.loaders[num].dismiss()
       .then(()=>{
-        this.loader2 = null;
-      })
-      .catch(e => console.log(e));
-  }
-
-  async presentLoader() {
-    this.loader = await this.loadingController.create({
-      message: 'Please wait...'
-    });
-    await this.loader.present();
-  }
-
-  async dismissLoader() {
-    if(this.loader==null) return;
-      await this.loader.dismiss()
-      .then(()=>{
-        this.loader = null;
+        this.loaders[num] = null;
       })
       .catch(e => console.log(e));
   }
@@ -99,9 +82,9 @@ export class SignupPage implements OnInit {
 
     if(reg.test(this.newUser.email)){
       //email looks valid
-      this.presentLoader();
+      this.presentLoader(0);
       this.httpClient.get(this.linkService.getAPILink() + this.signup_link + '/?email=' + this.newUser.email + '&consumer_key='+ this.linkService.getConsumerKey() + '&consumer_secret='+this.linkService.getConsumerSecret()).subscribe((data: any)=>{
-        this.dismissLoader();
+        this.dismissLoader(0);
         console.log(data);
         if(data.length==0){
           validEmail = true;
@@ -114,7 +97,7 @@ export class SignupPage implements OnInit {
         console.log(validEmail);
       },
       (err)=>{
-        this.dismissLoader();
+        this.dismissLoader(0);
         console.log(err);
       });
     } else {
@@ -164,9 +147,9 @@ export class SignupPage implements OnInit {
     }
 
     console.log(customerData);
-    this.presentLoader2();
+    this.presentLoader(1);
     this.httpClient.post(this.linkService.getAPILink() + this.signup_link + '?consumer_key='+ this.linkService.getConsumerKey() + '&consumer_secret='+this.linkService.getConsumerSecret(), customerData).subscribe((data: any)=>{
-      this.dismissLoader2();
+      this.dismissLoader(1);
       console.log(data);
       let response = data;
 
@@ -175,7 +158,7 @@ export class SignupPage implements OnInit {
       }
     },
     (err)=>{
-      this.dismissLoader2();
+      this.dismissLoader(1);
       console.log(err);
       if(err.error.message){
         this.presentToast(err.error.message);

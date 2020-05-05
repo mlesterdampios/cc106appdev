@@ -17,7 +17,7 @@ export class LoginPage implements OnInit {
   password: string = "";
 
   login_link = "api/auth/generate_auth_cookie/?insecure=cool";
-  loader;
+  loaders = [null];
   constructor(private navController: NavController, 
     private toastController: ToastController, 
     private alertController: AlertController, 
@@ -32,21 +32,22 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
-  async presentLoader() {
-    this.loader = await this.loadingController.create({
+  async presentLoader(num) {
+    this.loaders[num] = await this.loadingController.create({
       message: 'Please wait...'
     });
-    await this.loader.present();
+    await this.loaders[num].present();
   }
 
-  async dismissLoader() {
-    if(this.loader==null) return;
-      await this.loader.dismiss()
+  async dismissLoader(num) {
+    if(this.loaders[num]==null) return;
+      await this.loaders[num].dismiss()
       .then(()=>{
-        this.loader = null;
+        this.loaders[num] = null;
       })
       .catch(e => console.log(e));
   }
+
   async presentToast(pMessage) {
     const toast = await this.toastController.create({
       message: pMessage,
@@ -85,10 +86,10 @@ export class LoginPage implements OnInit {
   }
 
   login(){
-    this.presentLoader();
+    this.presentLoader(0);
     this.httpClient.get(this.linkService.getAPILink() + this.login_link + '&username=' + this.username + '&password=' + this.password)
     .subscribe((data: any)=>{
-      this.dismissLoader();
+      this.dismissLoader(0);
       console.log(data);
 
       if(data.error){
@@ -102,7 +103,7 @@ export class LoginPage implements OnInit {
     },
     (err)=>{
       console.log(err)
-      this.dismissLoader();
+      this.dismissLoader(0);
     });
   }
 

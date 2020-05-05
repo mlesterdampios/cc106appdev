@@ -22,8 +22,8 @@
 
   <ion-grid>
     <ion-row>
-      <ion-slides #productSlides>
-        <ion-slide *ngFor="let product of products">
+      <ion-slides>
+        <ion-slide *ngFor="let product of products" (click)="openProductPage(product)">
           <ion-card class="ion-no-padding">
             <img *ngIf="product.images.length != 0" [src]="product.images[0].src" />
             <h1 class="ion-padding" class="ion-text-center"> {{ product.name }} </h1>
