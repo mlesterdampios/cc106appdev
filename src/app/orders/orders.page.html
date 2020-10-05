@@ -1,0 +1,126 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Orders</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngFor="let order of orders">
+
+    <ion-item class="compact">
+      <div>
+        <p>
+          <b>
+            Order#
+          </b>{{ order.number }}
+        </p>
+
+        <p>
+          <b>
+            Date: 
+          </b>{{ order.date_created }}
+        </p>
+
+        <p>
+          <b>
+            Payment Method: 
+          </b>{{ order.payment_method_title }}
+        </p>
+
+        <p>
+          <b>
+            Order Status: 
+          </b>{{ order.status }}
+        </p>
+        <!-- billing -->
+        <p *ngIf="order.shipping.address_1">
+          <b>
+            Address 1:
+          </b>{{ order.shipping.address_1 }}
+        </p>
+
+        <p *ngIf="order.shipping.address_2">
+          <b>
+            Address 2: 
+          </b>{{ order.shipping.state }}
+        </p>
+
+        <p *ngIf="order.shipping.city">
+          <b>
+            City:
+          </b>{{ order.shipping.city }}
+        </p>
+
+        <p *ngIf="order.shipping.company">
+          <b>
+            Company:
+          </b>{{ order.shipping.company }}
+        </p>
+        <p *ngIf="order.shipping.country">
+          <b>
+            Country:
+          </b>{{ order.shipping.country }}
+        </p>
+
+        <p *ngIf="order.shipping.first_name">
+          <b>
+            First Name:
+          </b>{{ order.shipping.first_name }}
+        </p>
+
+        <p *ngIf="order.shipping.last_name">
+          <b>
+            Last Name: 
+          </b>{{ order.shipping.last_name }}
+        </p>
+
+        <p *ngIf="order.shipping.postcode">
+          <b>
+            Post Code:
+          </b>{{ order.shipping.postcode }}
+        </p>
+
+        <p *ngIf="order.shipping.state">
+          <b>
+            State:
+          </b>{{ order.shipping.state }}
+        </p>
+        <!-- end billing-->
+      </div>
+    </ion-item>
+
+    <ion-slides *ngIf="order.line_items">
+      <ion-slide *ngFor="let line_item of order.line_items">
+        <ion-item color="light" class="fullSliding">
+          <div class="centerText">
+            <h2>{{ line_item.name }}</h2>
+            <p>
+              {{ line_item.quantity }} pc(s). • ₱
+              <span>{{ line_item.price }}</span>
+            </p>
+    
+            <div *ngIf="line_item.meta_data"> <!--if meta_data-->
+              <ion-chip *ngFor="let m_data of line_item.meta_data"> <!--meta_data loop-->
+                <ion-label>{{ m_data.value }}</ion-label>
+              </ion-chip>
+            </div>
+          </div>
+    
+        </ion-item>
+      </ion-slide>
+    </ion-slides>
+
+    <ion-item class="compact">
+      <div>
+        <p>
+          <b>
+            Total
+          </b>₱{{ order.total }}
+        </p>
+      </div>
+    </ion-item>
+  </ion-card>
+</ion-content>

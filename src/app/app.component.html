@@ -75,6 +75,14 @@
 
             </ion-item>
           </ion-menu-toggle>
+
+          <ion-menu-toggle>
+            <ion-item *ngIf="loggedIn" (click)="openPage('orders')">
+              <ion-icon name="list" slot="start" size="large"></ion-icon>
+              <ion-label>Your Orders</ion-label>
+
+            </ion-item>
+          </ion-menu-toggle>
           
           <ion-menu-toggle>
             <ion-item *ngIf="loggedIn" (click)="openPage('logout')">
