@@ -92,6 +92,15 @@
             </ion-item>
           </ion-menu-toggle>
           
+          <ion-item-divider color="danger">Group Members</ion-item-divider>
+    
+          <ion-menu-toggle>
+            <ion-item class="ion-text-wrap" (click)="openPage('groupmembers')">
+              <ion-icon name="people" slot="start" size="large"></ion-icon>
+              <ion-label> Group Members </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
         </ion-list>
       </ion-content>
     </ion-menu>

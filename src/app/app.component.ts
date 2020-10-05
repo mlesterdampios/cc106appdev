@@ -199,6 +199,9 @@ export class AppComponent implements OnInit {
     if (pageName == "orders") {
       this.navController.navigateForward('orders');
     }
+    if (pageName == "groupmembers") {
+      this.navController.navigateForward('groupmembers');
+    }
     if (pageName == 'logout') {
       this.storage.remove("userLoginInfo").then(() => {
         this.user = {};
