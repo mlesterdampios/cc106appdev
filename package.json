@@ -38,7 +38,7 @@
     "cordova-android": "^8.1.0",
     "cordova-sqlite-storage": "^5.0.0",
     "core-js": "^2.5.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "onesignal-cordova-plugin": "^2.9.1",
     "path": "^0.12.7",
     "process": "^0.11.10",
